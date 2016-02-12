@@ -13,6 +13,6 @@ https://github.com/KaOS-Community-Packages/libgee
 
 You need to install it first with the app kcp (without sudo):
 
-kcp -i libgee
+kcp -di libgee
 
 
