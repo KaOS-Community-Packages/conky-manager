@@ -1,33 +1,33 @@
-
 pkgname=conky-manager
 pkgver=2.4
-pkgbase=~136~ubuntu15.04.1
+_ubuntu=~136~ubuntu15.10.1
 pkgrel=1
 pkgdesc="GUI for managing Conky config files with options to browse and edit themes"
 url="https://launchpad.net/conky-manager"
 arch=('x86_64')
 license=('GPL3')
-depends=('cairo' 'conky' 'desktop-file-utils' 'gtk3' 'imagemagick' 'json-glib' 'libgee' 'libsoup' 'p7zip' 'rsync')
+depends=('cairo' 'conky' 'desktop-file-utils' 'gtk3' 'imagemagick' 'json-glib' 'libgee' 'p7zip' 'rsync')
 makedepends=('vala')
-options=(!emptydirs)
+options=('!emptydirs')
 install=conky-manager.install
-source=(http://ppa.launchpad.net/teejee2008/ppa/ubuntu/pool/main/c/${pkgname}/${pkgname}_${pkgver}${pkgbase}.tar.xz)
-sha512sums=('647fc3cc28ab4ad11303fcc35ff66962ec4c18813a38ce47269e32dbe864482f7da1ceeea1663bb4257c6bc210bd8c9c285603057a20f5cf8a007a3ee412d165')
+source=(${pkgname}-${pkgver}.tar.xz::https://launchpad.net/~teejee2008/+archive/ubuntu/ppa/+files/${pkgname}_${pkgver}${_ubuntu}.tar.xz
+        makefile-roundup.patch)
+sha512sums=('f691f067d0a921f19bb83118e3c845845582f7caaa76db4458e02e3897e0bc40ac6d62fb84b05d9061f8381fca7ab8470843a7d7b25dacf95fb363def29789d2'
+            '3ce1bdcabfd9ee4713ed45a5d7b0dd913b69a0623f96c3aa4a49737ee685330aa7b4a9a369f7e4bd584e41d7eacbbaa9be6fff36db39186026c73bfb672ffc25')
+
+prepare() {
+  cd ${pkgname}-${pkgver}${_ubuntu}
+  patch -Np0 < "${srcdir}/makefile-roundup.patch"
+}
 
 build() {
-  cd ${pkgname}-${pkgver}${pkgbase}
+  cd ${pkgname}-${pkgver}${_ubuntu}
   make
 }
 
 package() {
-  cd ${pkgname}-${pkgver}${pkgbase}
+  cd ${pkgname}-${pkgver}${_ubuntu}
   make DESTDIR="${pkgdir}" install
-
-  # fix make install problems
-  rm "${pkgdir}/usr/bin/conky-manager-uninstall"
-  find "${pkgdir}/usr/share/${pkgname}" -type f -print0 | xargs -0 chmod 644
-  chmod 644 "${pkgdir}/usr/share/applications/conky-manager.desktop" \
-    "${pkgdir}/usr/share/pixmaps/conky-manager.png"
 }
 
 # vim: ts=2 sw=2 et:
